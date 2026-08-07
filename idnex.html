@@ -1,79 +1,274 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PHD-Kim Planner</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHD Planner</title>
 
-<style>
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f3f5f7;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-header{
-    background:#1976d2;
-    color:white;
-    text-align:center;
-    padding:25px;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+    }
 
-.container{
-    max-width:900px;
-    margin:auto;
-    padding:30px;
-}
+    header {
+      background: #1f4f8f;
+      color: white;
+      padding: 18px 24px;
+    }
 
-.card{
-    background:white;
-    border-radius:15px;
-    padding:25px;
-    box-shadow:0 5px 15px rgba(0,0,0,.1);
-}
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
 
-button{
-    width:100%;
-    padding:15px;
-    margin-top:20px;
-    font-size:18px;
-    background:#1976d2;
-    color:white;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-}
-</style>
+    header p {
+      margin: 6px 0 0;
+      opacity: 0.85;
+    }
 
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr 280px;
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .menu button {
+      width: 100%;
+      border: none;
+      background: transparent;
+      text-align: left;
+      padding: 12px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .menu button:hover,
+    .menu button.active {
+      background: #e8f0fb;
+      color: #1f4f8f;
+      font-weight: bold;
+    }
+
+    .week-header {
+      display: grid;
+      grid-template-columns: 70px repeat(7, 1fr);
+      border-bottom: 1px solid #dfe3e8;
+    }
+
+    .week-header div {
+      padding: 12px 6px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .schedule {
+      display: grid;
+      grid-template-columns: 70px repeat(7, 1fr);
+    }
+
+    .time,
+    .slot {
+      min-height: 58px;
+      border-bottom: 1px solid #e5e7eb;
+      border-right: 1px solid #e5e7eb;
+      padding: 6px;
+    }
+
+    .time {
+      text-align: right;
+      padding-right: 10px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .slot {
+      cursor: pointer;
+    }
+
+    .slot:hover {
+      background: #f8fafc;
+    }
+
+    .event {
+      background: #dbeafe;
+      border-left: 4px solid #2563eb;
+      border-radius: 6px;
+      padding: 6px;
+      font-size: 13px;
+    }
+
+    .task {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eceff1;
+    }
+
+    .task input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .add-button {
+      width: 100%;
+      margin-top: 14px;
+      padding: 12px;
+      border: none;
+      border-radius: 9px;
+      background: #1f4f8f;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .menu {
+        display: flex;
+        overflow-x: auto;
+        gap: 8px;
+      }
+
+      .menu button {
+        min-width: 120px;
+      }
+
+      .calendar-panel {
+        overflow-x: auto;
+      }
+
+      .week-header,
+      .schedule {
+        min-width: 900px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <header>
+    <h1>PHD Planner</h1>
+    <p>개인 일정 및 시간 블록 관리</p>
+  </header>
 
-<header>
+  <main class="layout">
 
-<h1>📅 PHD-Kim Planner</h1>
+    <aside class="panel">
+      <h3>메뉴</h3>
 
-<p>개인 일정관리 시스템</p>
+      <div class="menu">
+        <button class="active">주간 일정</button>
+        <button>월간 일정</button>
+        <button>할 일</button>
+        <button>운동 기록</button>
+        <button>연구 관리</button>
+        <button>설정</button>
+      </div>
+    </aside>
 
-</header>
+    <section class="panel calendar-panel">
+      <h2>이번 주 일정</h2>
 
-<div class="container">
+      <div class="week-header">
+        <div>시간</div>
+        <div>월</div>
+        <div>화</div>
+        <div>수</div>
+        <div>목</div>
+        <div>금</div>
+        <div>토</div>
+        <div>일</div>
+      </div>
 
-<div class="card">
+      <div class="schedule" id="schedule"></div>
+    </section>
 
-<h2>환영합니다.</h2>
+    <aside class="panel">
+      <h3>오늘 할 일</h3>
 
-<p>
-이 홈페이지는 앞으로 일정관리 프로그램으로 발전할 예정입니다.
-</p>
+      <div class="task">
+        <input type="checkbox">
+        <span>보고서 작성</span>
+      </div>
 
-<button>
-일정관리 (준비중)
-</button>
+      <div class="task">
+        <input type="checkbox">
+        <span>러닝 3km</span>
+      </div>
 
-</div>
+      <div class="task">
+        <input type="checkbox">
+        <span>연구자료 정리</span>
+      </div>
 
-</div>
+      <button class="add-button" onclick="addTask()">할 일 추가</button>
+    </aside>
 
+  </main>
+
+  <script>
+    const schedule = document.getElementById("schedule");
+
+    for (let hour = 7; hour <= 23; hour++) {
+      const time = document.createElement("div");
+      time.className = "time";
+      time.textContent = `${String(hour).padStart(2, "0")}:00`;
+      schedule.appendChild(time);
+
+      for (let day = 0; day < 7; day++) {
+        const slot = document.createElement("div");
+        slot.className = "slot";
+
+        if (hour === 9 && day === 0) {
+          slot.innerHTML = '<div class="event">업무 계획</div>';
+        }
+
+        if (hour === 20 && day === 2) {
+          slot.innerHTML = '<div class="event">운동</div>';
+        }
+
+        slot.addEventListener("click", () => {
+          const title = prompt("일정 제목을 입력하세요.");
+
+          if (title) {
+            slot.innerHTML = `<div class="event">${title}</div>`;
+          }
+        });
+
+        schedule.appendChild(slot);
+      }
+    }
+
+    function addTask() {
+      const task = prompt("할 일을 입력하세요.");
+
+      if (task) {
+        alert(`다음 단계에서 저장 기능을 연결합니다: ${task}`);
+      }
+    }
+  </script>
 </body>
 </html>
